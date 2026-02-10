@@ -1,110 +1,73 @@
-#!/bin/bash
-set -e
-
-# ===== WARNA TERMINAL =====
-YELLOW="\033[1;33m"
-RED="\033[0;31m"
-LIGHT_BLUE="\033[1;36m"
-BOLD_WHITE="\033[1;37m"
-CYAN="\033[0;36m"
-GREEN="\033[0;32m"
-LIGHT_GREEN="\033[1;32m"
-NC="\033[0m"
-
-# ===== LICENSE URL =====
-LICENSE_URL="https://raw.githubusercontent.com/kyt-team/regip/main/ip"
-
-# ===== CEK ROOT =====
-if [ "$(id -u)" -ne 0 ]; then
-  echo -e "${RED}This script must be run as root.${NC}" >&2
+YELLOW=\033[1;33m
+RED=3[0;31m
+LIGHT_BLUE=\033[1;36m # biru muda terang
+BOLD_WHITE=\033[1;37m
+CYAN=33[0;36m
+GREEN=033[0;32m
+LIGHT_GREEN=3[1;32m
+NC=\033[0m # No Color
+LICENSE_URL=ps://raw.githubusercontent.com/arivpnstores/izin/main/ip2
+LICENSE_INFO_FILE=etc/zivpn/.license_info
+CONFIG_DIR=/etc/zivpn
+TELEGRAM_CONF={CONFIG_DIR}/telegram.conf
+if [ id -u)-ne 0 ]; then
+  echo is script must be run as root. Please use sudo or run as root user. >&2
   exit 1
 fi
-
-# ===== KONFIG TELEGRAM =====
-TELEGRAM_CONF="/etc/zivpn/telegram.conf"
-
-# ===== FUNGSI TELEGRAM =====
-send_telegram_notification() {
-  local message="$1"
-  local keyboard="$2"
-
-  [ ! -f "$TELEGRAM_CONF" ] && return 0
-
-  source "$TELEGRAM_CONF"
-
-  if [[ -n "$TELEGRAM_BOT_TOKEN" && -n "$TELEGRAM_CHAT_ID" ]]; then
-    local api_url="https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
-
-    if [ -n "$keyboard" ]; then
-      curl -s -X POST "$api_url" \
-        -d chat_id="$TELEGRAM_CHAT_ID" \
-        --data-urlencode text="$message" \
-        -d reply_markup="$keyboard" \
-        > /dev/null
-    else
-      curl -s -X POST "$api_url" \
-        -d chat_id="$TELEGRAM_CHAT_ID" \
-        --data-urlencode text="$message" \
-        -d parse_mode="Markdown" \
-        > /dev/null
+function send_telegram_notification() {
+  local message=1
+  local keyboard=$2
+  if [ ! -f TELEGRAM_CONF; then
+    return 1
+  fi
+  source $TELEGRAM_CONF
+  if [ -n LEGRAM_BOT_TOKEN&& [ -n LEGRAM_CHAT_ID]; then
+    local api_url=ttps://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage
+    if [ -n yboard]; then
+      curl -s -X POST i_urld hat_id=${TELEGRAM_CHAT_ID}--data-urlencode xt=${message}d eply_markup=${keyboard} > /dev/null
+      else
+      curl -s -X POST i_urld hat_id=${TELEGRAM_CHAT_ID}--data-urlencode xt=${message}d arse_mode=Markdown> /dev/null
     fi
   fi
 }
-
-# ===== VERIFIKASI LISENSI =====
-verify_license() {
-  echo -e "${CYAN}Verifying installation license...${NC}"
-
+function verify_license() {
+  echo rifying installation license...
   local SERVER_IP
-  SERVER_IP="$(cat /etc/zivpn/ip.txt 2>/dev/null)"
-
-  if [ -z "$SERVER_IP" ]; then
-    echo -e "${RED}Failed to retrieve server IP.${NC}"
+  SERVER_IP=$(cat /etc/zivpn/ip.txt)
+  if [ -z RVER_IP ]; then
+    echo -e ED}Failed to retrieve server IP. Please check your internet connection.${NC}
     exit 1
   fi
-
   local license_data
-  license_data="$(curl -fsS "$LICENSE_URL" || true)"
-
-  if [ -z "$license_data" ]; then
-    echo -e "${RED}Gagal terhubung ke server lisensi.${NC}"
+  license_data=$(curl -s $LICENSE_URL
+  if [ $? -ne 0 ] || [ -z cense_data]; then
+    echo -e ED}Gagal terhubung ke server lisensi. Mohon periksa koneksi internet Anda.${NC}
     exit 1
   fi
-
   local license_entry
-  license_entry="$(echo "$license_data" | grep -w "$SERVER_IP" || true)"
-
-  if [ -z "$license_entry" ]; then
-    echo -e "${RED}Lisensi tidak valid untuk IP: $SERVER_IP${NC}"
+  license_entry=$(echo icense_data | grep -w $SERVER_IP
+  if [ -z cense_entry ]; then
+    echo -e ED}Verifikasi Lisensi Gagal! IP Anda tidak terdaftar. IP: ${SERVER_IP}${NC}
     exit 1
   fi
-
-  local client_name expiry_date_str
-  client_name="$(echo "$license_entry" | awk '{print $1}')"
-  expiry_date_str="$(echo "$license_entry" | awk '{print $2}')"
-
-  local expiry_timestamp current_timestamp
-  expiry_timestamp="$(date -d "$expiry_date_str" +%s)"
-  current_timestamp="$(date +%s)"
-
-  if [ "$expiry_timestamp" -le "$current_timestamp" ]; then
-    echo -e "${RED}Lisensi expired untuk IP $SERVER_IP (${expiry_date_str})${NC}"
+  local client_name
+  local expiry_date_str
+  client_name=$(echo $license_entry| awk print $1}
+  expiry_date_str=$(echo $license_entry| awk print $2}
+  local expiry_timestamp
+  expiry_timestamp=$(date -d $expiry_date_strs)
+  local current_timestamp
+  current_timestamp=$(date +%s)
+  if [ xpiry_timestamp -le urrent_timestamp then
+    echo -e ED}Verifikasi Lisensi Gagal! Lisensi untuk IP ${SERVER_IP} telah kedaluwarsa. Tanggal Kedaluwarsa: ${expiry_date_str}${NC}
     exit 1
   fi
-
-  echo -e "${GREEN}Lisensi valid untuk $client_name hingga $expiry_date_str${NC}"
-  send_telegram_notification "✅ *ZIVPN License Valid*\nIP: $SERVER_IP\nClient: $client_name\nExpired: $expiry_date_str"
-}
-
-# ===== MAIN =====
-verify_license
-echo -e "${GREEN}ZIVPN Manager siap digunakan.${NC}"
-
   echo -e IGHT_GREEN}Verifikasi Lisensi Berhasil! Client: ${client_name}, IP: ${SERVER_IP}${NC}
   sleep 2 # Brief pause to show the message
   mkdir -p /etc/zivpn
   echo IENT_NAME=${client_name}CENSE_INFO_FILE
   echo PIRY_DATE=${expiry_date_str} ICENSE_INFO_FILE
+}
 update_expiry_from_license_url() {
   echo ncing expiry license...
   local SERVER_IP
@@ -140,6 +103,7 @@ update_expiry_from_license_url() {
   echo -e IGHT_GREEN}Sinkronisasi lisensi berhasil!${NC}
   echo -e ent  : ${CLIENT_NAME}
   echo -e iry  : ${NEW_EXP_FROM_SERVER}
+}
 function restart_zivpn() {
   systemctl restart zivpn.service --no-block
 }
@@ -669,7 +633,7 @@ fi
 _save_total_users
 total_users=$(cat /etc/zivpn/total_users.txt)
 apikey=$(cat /etc/zivpn/api_auth.key)
-VERSI_URL=ttps://raw.githubusercontent.com/kyt-team/udp-zivpn/main/versi.txt
+VERSI_URL=ttps://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/versi.txt
 versisc=$(curl -fsSL ERSI_URL/dev/null | tr -d \r\n
 if [ -z rsisc; then
   versisc=NOWN
@@ -843,7 +807,7 @@ echo -e ED}───────────────────────
 echo -e OLD_WHITE}Akses ke layanan ZIVPN di server anda telah dihentikan.
 echo -e ala aktivitas VPN tidak akan berfungsi lagi.\n
 echo -e uk memperpanjang lisensi dan mengaktifkan kembali layanan,
-echo -e akan hubungi admin https://wa.me/ \n
+echo -e akan hubungi admin https://wa.me/6285647299390 \n
 echo -e IGHT_GREEN}Setelah diperpanjang, layanan akan aktif kembali secara otomatis.${NC}\n
 exit 0
 }
@@ -853,7 +817,7 @@ if [ -f c/zivpn/.expired then
 fi
 clear
 figlet UDP ZIVPN lolcat
-echo -e ELLOW}┌───────────// ${CYAN}SKYNET VPN STORE${YELLOW} //─────────────┐${NC}
+echo -e ELLOW}┌───────────// ${CYAN}PT RAJA SERVER PREMIUM${YELLOW} //─────────────┐${NC}
 _draw_info_panel
 _draw_service_status
 echo -e ELLOW}│                                                    │${NC}
@@ -885,10 +849,10 @@ case $choice in
 7) _generate_api_key ;;
 8) _lihat_api_key ;;
 9) systemctl restart zivpn.service --no-block && systemctl restart zivpn-udp.service --no-block && read -p Tekan Enter untuk kembali ke menu... /usr/local/bin/zivpn-manager ;;
-10) wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/update.sh -O /usr/local/bin/update-manager && chmod +x /usr/local/bin/update-manager && /usr/local/bin/update-manager && read -p Tekan Enter untuk kembali ke menu... /usr/local/bin/zivpn-manager ;;
+10) wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/update.sh -O /usr/local/bin/update-manager && chmod +x /usr/local/bin/update-manager && /usr/local/bin/update-manager && read -p Tekan Enter untuk kembali ke menu... /usr/local/bin/zivpn-manager ;;
 11) update_expiry_from_license_url && read -p ekan Enter untuk kembali ke menu... && /usr/local/bin/zivpn-manager ;;
 12) wget https://raw.githubusercontent.com/arivpnstores/v4/main/Cdy/speedtest -O /usr/bin/speedtest && chmod +x /usr/bin/speedtest && yes | /usr/bin/speedtest && read -p ekan Enter untuk kembali ke menu... && /usr/local/bin/zivpn-manager ;;
-13) wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/fix-zivpn.sh -O /usr/local/bin/fix-zivpn.sh && chmod +x /usr/local/bin/fix-zivpn.sh && /usr/local/bin/fix-zivpn.sh && read -p an Enter untuk kembali ke menu...& /usr/local/bin/zivpn-manager ;;
+13) wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/fix-zivpn.sh -O /usr/local/bin/fix-zivpn.sh && chmod +x /usr/local/bin/fix-zivpn.sh && /usr/local/bin/fix-zivpn.sh && read -p an Enter untuk kembali ke menu...& /usr/local/bin/zivpn-manager ;;
 14) set_reboot_menu ;;
 0) exit 0 ;;
 *) echo alid option. Please try again.;;
@@ -934,7 +898,7 @@ exit 1
 ;;
 esac
 echo rdeteksi arsitektur: $ARCH → pakai $FILE
-wget -O /root/zi.sh ps://raw.githubusercontent.com/kyt-team/udp-zivpn/main/$FILE
+wget -O /root/zi.sh ps://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/$FILE
 echo  Beri izin executable...
 chmod +x /root/zi.sh
 echo  Jalankan skrip instalasi ZiVPN...
@@ -971,7 +935,7 @@ else
 echo rning: Could not automatically detect network interface for vnstat.
 fi
 echo wnloading helper script...
-wget -O /usr/local/bin/zivpn_helper.sh https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/zivpn_helper.sh
+wget -O /usr/local/bin/zivpn_helper.sh https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/zivpn_helper.sh
 if [ $? -ne 0 ]; then
 echo iled to download helper script. Aborting.
 exit 1
@@ -1017,7 +981,7 @@ CRON_JOB_EXPIRY= * * * /etc/zivpn/expire_check.sh # zivpn-expiry-check
 (crontab -l 2>/dev/null; echo CRON_JOB_EXPIRY) | crontab -
 echo tting up license check script and cron job...
 cat <<OF> /etc/zivpn/license_checker.sh
-LICENSE_URL=ps://raw.githubusercontent.com/kyt-team/regip/main/ip
+LICENSE_URL=ps://raw.githubusercontent.com/arivpnstores/izin/main/ip2
 LICENSE_INFO_FILE=etc/zivpn/.license_info
 EXPIRED_LOCK_FILE=etc/zivpn/.expired
 TELEGRAM_CONF=etc/zivpn/telegram.conf
