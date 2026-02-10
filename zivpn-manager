@@ -1,18 +1,27 @@
 #!/bin/bash
 
-YELLOW=\033[1;33m
-RED=3[0;31m
-LIGHT_BLUE=\033[1;36m # biru muda terang
-BOLD_WHITE=\033[1;37m
-CYAN=33[0;36m
-GREEN=033[0;32m
-LIGHT_GREEN=3[1;32m
-NC=\033[0m # No Color
-LICENSE_URL=ps://raw.githubusercontent.com/kyt-team/regip/main/ip
-  echo is script must be run as root. Please use sudo or run as root user. >&2
+# ===== WARNA TERMINAL =====
+YELLOW="\033[1;33m"
+RED="\033[0;31m"
+LIGHT_BLUE="\033[1;36m"   # biru muda terang
+BOLD_WHITE="\033[1;37m"
+CYAN="\033[0;36m"
+GREEN="\033[0;32m"
+LIGHT_GREEN="\033[1;32m"
+NC="\033[0m"              # No Color
+
+# ===== LICENSE URL =====
+LICENSE_URL="https://raw.githubusercontent.com/kyt-team/regip/main/ip"
+
+# ===== CEK ROOT =====
+if [ "$(id -u)" -ne 0 ]; then
+  echo -e "${RED}This script must be run as root. Please use sudo or login as root.${NC}" >&2
   exit 1
 fi
-function send_telegram_notification() {
+
+# ===== FUNGSI TELEGRAM =====
+send_telegram_notification() {
+
   local message=1
   local keyboard=$2
   if [ ! -f TELEGRAM_CONF; then
