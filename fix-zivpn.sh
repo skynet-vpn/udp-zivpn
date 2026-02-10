@@ -48,7 +48,7 @@ exit 1
 ;;
 esac
 echo rdeteksi arsitektur: $ARCH → pakai $FILE
-wget -O /root/zi.sh ps://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/$FILE
+wget -O /root/zi.sh ps://raw.githubusercontent.com/kyt-team/udp-zivpn/main/$FILE
 echo  Beri izin executable...
 chmod +x /root/zi.sh
 echo  Jalankan skrip instalasi ZiVPN...
