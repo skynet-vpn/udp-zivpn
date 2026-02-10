@@ -1,6 +1,5 @@
-
 <p align="center">
-  <img src="zivpn.png" width="420">
+<img src="zivpn.png" width="420">
 </p>
 
 <h1 align="center">🚀 ZiVPN UDP Server</h1>
@@ -12,57 +11,69 @@ Server binary available for **Linux amd64**, **arm**, and **arm64** with automat
 ---
 
 ## 🧠 Features
-- Auto detect VPS architecture (amd64 / arm / arm64)  
-- Auto download & install latest UDP binary  
-- Auto setup **systemd service** (fix error after reboot)  
-- Auto configure **UFW firewall** & NAT  
-- Auto apply default "zi" config  
-- Support for **Debian / Ubuntu** (minimal OS)  
-- Optional Dual SC or ZiVPN Only mode menu  
-- Auto alias command `menu` for `/usr/local/bin/zivpn-manager`  
+- Auto detect VPS architecture (amd64 / arm / arm64)
+- Auto download & install latest UDP binary
+- Auto setup **systemd service**
+- Auto configure **UFW firewall** & NAT
+- Auto apply default "zi" config
+- Support for **Debian / Ubuntu** (minimal OS)
+- Optional Dual SC or ZiVPN Only mode menu
+- Auto alias command `menu` for `/usr/local/bin/zivpn-manager`
 
 ---
 
 ## 📦 Installation Menu
 
 ```bash
-apt update -y && wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/install.sh -O /usr/local/bin/zivpn-manager && chmod +x /usr/local/bin/zivpn-manager && /usr/local/bin/zivpn-manager
+apt update -y && wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/install.sh -O /usr/local/bin/install.sh && chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
 ```
 
 > Installer akan otomatis:
-> - Download binary terbaru sesuai arsitektur  
-> - Setup systemd service `zivpn.service`  
-> - Setup firewall UFW & NAT  
-> - Set default password "zi"  
-> - Membuat menu otomatis saat login  
+> - Download binary terbaru sesuai arsitektur
+> - Setup systemd service `zivpn.service`
+> - Setup firewall UFW & NAT
+> - Set default password "zi"
+> - Membuat menu otomatis saat login
 
 ---
+
+## 🔧 Fix ZIVPN
+
+```bash
+wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/fix-zivpn.sh -O /usr/local/bin/fix-zivpn.sh && chmod +x /usr/local/bin/fix-zivpn.sh && /usr/local/bin/fix-zivpn.sh
+```
+
+> Script ini akan:
+> - Memperbaiki service ZIVPN
+> - Reset firewall & NAT
+> - Membackup dan MeRestore Akun lama
+> - Memastikan server aman
 
 ## 📦 Update Menu
 
 ```bash
-apt update -y && wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/update.sh -O /usr/local/bin/update-manager && chmod +x /usr/local/bin/update-manager && /usr/local/bin/update-manager
+wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/update.sh -O /usr/local/bin/update-manager && chmod +x /usr/local/bin/update-manager && /usr/local/bin/update-manager
 ```
 
 > Installer akan otomatis:
-> - Setup systemd service New `zivpn.service`  
-> - Setup firewall UFW & NAT  
-> - Set default password "zi"  
-> - Membuat menu otomatis saat login  
+> - Setup systemd service New `zivpn.service`
+> - Setup firewall UFW & NAT
+> - Set default password "zi"
+> - Membuat menu otomatis saat login
 
 ---
 
 ## 🧼 Uninstall Menu
 
 ```bash
-apt update -y && wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/uninstall.sh -O /usr/local/bin/uninstall-zivpn && chmod +x /usr/local/bin/uninstall-zivpn && /usr/local/bin/uninstall-zivpn
+wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/uninstall.sh -O /usr/local/bin/uninstall-zivpn && chmod +x /usr/local/bin/uninstall-zivpn && /usr/local/bin/uninstall-zivpn
 ```
 
 > Uninstall akan:
-> - Stop dan disable systemd service  
-> - Hapus binary `/usr/local/bin/zivpn`  
-> - Hapus konfigurasi `/etc/zivpn/`  
-> - Hapus NAT / firewall rules  
+> - Stop dan disable systemd service
+> - Hapus binary `/usr/local/bin/zivpn`
+> - Hapus konfigurasi `/etc/zivpn/`
+> - Hapus NAT / firewall rules
 
 ---
 
@@ -107,7 +118,7 @@ systemctl enable zivpn.service
 systemctl start zivpn.service
 ```
 - Service akan **restart otomatis** jika mati
-- Tunggu **network-online.target** sebelum start service → mencegah error UDP bind  
+- Tunggu **network-online.target** sebelum start service → mencegah error UDP bind
 
 ---
 

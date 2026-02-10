@@ -1,32 +1,44 @@
-set -e
-echo  Checking cron service...
-if ! command -v crontab >/dev/null 2>&1; then
-  echo  Cron not found. Installing cron...
-  apt update -y
-  apt install -y cron
-fi
-systemctl enable cron >/dev/null 2>&1 || true
-systemctl start cron >/dev/null 2>&1 || true
-echo Cron service ready.
-chmod +x /etc/zivpn/license_checker.sh
-(crontab -l 2>/dev/null | grep -v  zivpn-license-check crontab -
-(crontab -l 2>/dev/null; echo /5 * * * * /etc/zivpn/license_checker.sh # zivpn-license-check | crontab -
-echo Auto check license scheduled every 5 minutes.
-chmod +x /usr/local/bin/zivpn_helper.sh
-(crontab -l 2>/dev/null | grep -v  zivpn-auto-backup | crontab -
-(crontab -l 2>/dev/null; echo  2 * * * /usr/local/bin/zivpn_helper.sh backup >/dev/null 2>&1 # zivpn-auto-backup | crontab -
-echo Auto backup scheduled DAILY at 02:00.
-(crontab -l 2>/dev/null | grep -v  zivpn-auto-reboot | crontab -
-(crontab -l 2>/dev/null; echo  3 * * * /sbin/reboot # zivpn-auto-reboot| crontab -
-echo Auto reboot scheduled DAILY at 03:00.
-chmod +x /etc/zivpn/expire_check.sh
-(crontab -l 2>/dev/null | grep -v  zivpn-expiry-check) | crontab -
-(crontab -l 2>/dev/null; echo  * * * * /etc/zivpn/expire_check.sh # zivpn-expiry-check crontab -
-echo Auto expiry check scheduled EVERY MINUTE.
+set -euo pipefail
 echo  Updating ZiVPN Manager...
-wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/install.sh -O /usr/local/bin/zivpn-manager
+wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/install.sh \
+-O /usr/local/bin/install.sh
+chmod +x /usr/local/bin/install.sh
+wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/zivpn-manager \
+-O /usr/local/bin/zivpn-manager
 chmod +x /usr/local/bin/zivpn-manager
-wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/zivpn_helper.sh -O /usr/local/bin/zivpn_helper.sh
+wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/zivpn_helper.sh \
+-O /usr/local/bin/zivpn_helper.sh
 chmod +x /usr/local/bin/zivpn_helper.sh
+wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/update.sh \
+-O /usr/local/bin/update-manager
+chmod +x /usr/local/bin/update-manager
 echo  ZiVPN Update completed successfully.
+echo  Checking ZiVPN NAT rule...
+apt-get update -y >/dev/null 2>&1 || true
+apt-get install -y iptables-persistent netfilter-persistent >/dev/null 2>&1 || true
+systemctl enable netfilter-persistent >/dev/null 2>&1 || true
+IFACE=(ip -4 route show default 2>/dev/null | awk r(i=1;i<=NF;i++) if($i==rint $(i+1); exit}})
+if [ -z FACE:-} ]; then
+  echo   No default interface detected. Skip NAT.
+  else
+  if iptables -t nat -C PREROUTING -i ACE -p udp --dport 6000:19999 -j DNAT --to-destination :5667 2>/dev/null; then
+    echo NAT rule already exists.
+    else
+    echo NAT rule missing. Adding...
+    iptables -t nat -A PREROUTING -i FACE udp --dport 6000:19999 -j DNAT --to-destination :5667
+  fi
+  echo  Cleaning duplicate NAT rules (keep one)...
+  while true; do
+    COUNT=(iptables -t nat -S PREROUTING 2>/dev/null | grep -c -- port 6000:19999 || true)
+    if [ COUNT:-0}le 1 ]; then
+      break
+    fi
+    iptables -t nat -D PREROUTING -i FACE udp --dport 6000:19999 -j DNAT --to-destination :5667 2>/dev/null || break
+  done
+  if netfilter-persistent save >/dev/null 2>&1; then
+    echo netfilter-persistent saved.
+    else
+    echo   Failed to save netfilter-persistent (check permission/service).
+  fi
+fi
 /usr/local/bin/zivpn-manager

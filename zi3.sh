@@ -13,9 +13,7 @@ sysctl -w net.core.wmem_max=16777216
 cat <<EOF > /etc/systemd/system/zivpn.service
 [Unit]
 Description=zivpn VPN Server
-After=network-online.target
-Wants=network-online.target
-StartLimitIntervalSec=0
+After=network.target
 [Service]
 Type=simple
 User=root
@@ -42,4 +40,26 @@ iptables -t nat -A PREROUTING -i $(ip -4 route ls|grep default|grep -Po =dev )(\
 ufw allow 6000:19999/udp
 ufw allow 5667/udp
 rm zi.*
+echo -e � SAVE IPTABLES & CHECK STATUS
+if netfilter-persistent save >/dev/null 2>&1; then
+  echo iptables rules berhasil disimpan
+  else
+  echo GAGAL menyimpan iptables
+  exit 1
+fi
+if systemctl is-active --quiet netfilter-persistent; then
+  echo netfilter-persistent: ACTIVE
+  else
+  echo netfilter-persistent: NOT ACTIVE
+  systemctl status netfilter-persistent --no-pager
+  exit 1
+fi
+if grep -qE 0:19999|5667tc/iptables/rules.v4; then
+  echo NAT ZiVPN tersimpan di rules.v4
+  else
+  echo NAT ZiVPN TIDAK tersimpan!
+  echo  Isi rules.v4:
+  grep -nE EROUTING|DNATetc/iptables/rules.v4 || true
+  exit 1
+fi
 echo -e PN UDP Installed
