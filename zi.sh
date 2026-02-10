@@ -5,7 +5,7 @@ echo -e nloading UDP Service
 wget https://github.com/arivpnstores/udp-zivpn/releases/download/zahidbd2/udp-zivpn-linux-amd64 -O /usr/local/bin/zivpn
 chmod +x /usr/local/bin/zivpn
 mkdir /etc/zivpn
-wget https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/config.json -O /etc/zivpn/config.json
+wget https://raw.githubusercontent.com/kyt-teams/udp-zivpn/main/config.json -O /etc/zivpn/config.json
 echo nerating cert files:
 openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj /C=US/ST=California/L=Los Angeles/O=Example Corp/OU=IT Department/CN=zivpn-keyout c/zivpn/zivpn.keyout c/zivpn/zivpn.crt
 sysctl -w net.core.rmem_max=16777216
