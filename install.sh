@@ -45,7 +45,7 @@ if [[ ! nfirm~ ^[Yy]$ ]]; then
   echo Instalasi dibatalkan oleh user.
   exit 0
 fi
-wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/zivpn-manager \
+wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/zivpn-manager \
 -O /usr/local/bin/zivpn-manager
 chmod +x /usr/local/bin/zivpn-manager
 /usr/local/bin/zivpn-manager
