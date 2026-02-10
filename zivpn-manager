@@ -105,7 +105,6 @@ echo -e "${GREEN}ZIVPN Manager siap digunakan.${NC}"
   mkdir -p /etc/zivpn
   echo IENT_NAME=${client_name}CENSE_INFO_FILE
   echo PIRY_DATE=${expiry_date_str} ICENSE_INFO_FILE
-}
 update_expiry_from_license_url() {
   echo ncing expiry license...
   local SERVER_IP
@@ -141,7 +140,6 @@ update_expiry_from_license_url() {
   echo -e IGHT_GREEN}Sinkronisasi lisensi berhasil!${NC}
   echo -e ent  : ${CLIENT_NAME}
   echo -e iry  : ${NEW_EXP_FROM_SERVER}
-}
 function restart_zivpn() {
   systemctl restart zivpn.service --no-block
 }
