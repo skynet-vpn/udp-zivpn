@@ -1,74 +1,105 @@
 #!/bin/bash
+set -e
 
 # ===== WARNA TERMINAL =====
 YELLOW="\033[1;33m"
 RED="\033[0;31m"
-LIGHT_BLUE="\033[1;36m"   # biru muda terang
+LIGHT_BLUE="\033[1;36m"
 BOLD_WHITE="\033[1;37m"
 CYAN="\033[0;36m"
 GREEN="\033[0;32m"
 LIGHT_GREEN="\033[1;32m"
-NC="\033[0m"              # No Color
+NC="\033[0m"
 
 # ===== LICENSE URL =====
 LICENSE_URL="https://raw.githubusercontent.com/kyt-team/regip/main/ip"
 
 # ===== CEK ROOT =====
 if [ "$(id -u)" -ne 0 ]; then
-  echo -e "${RED}This script must be run as root. Please use sudo or login as root.${NC}" >&2
+  echo -e "${RED}This script must be run as root.${NC}" >&2
   exit 1
 fi
 
+# ===== KONFIG TELEGRAM =====
+TELEGRAM_CONF="/etc/zivpn/telegram.conf"
+
 # ===== FUNGSI TELEGRAM =====
 send_telegram_notification() {
+  local message="$1"
+  local keyboard="$2"
 
-  local message=1
-  local keyboard=$2
-  if [ ! -f TELEGRAM_CONF; then
-    return 1
-  fi
-  source $TELEGRAM_CONF
-  if [ -n LEGRAM_BOT_TOKEN&& [ -n LEGRAM_CHAT_ID]; then
-    local api_url=ttps://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage
-    if [ -n yboard]; then
-      curl -s -X POST i_urld hat_id=${TELEGRAM_CHAT_ID}--data-urlencode xt=${message}d eply_markup=${keyboard} > /dev/null
-      else
-      curl -s -X POST i_urld hat_id=${TELEGRAM_CHAT_ID}--data-urlencode xt=${message}d arse_mode=Markdown> /dev/null
+  [ ! -f "$TELEGRAM_CONF" ] && return 0
+
+  source "$TELEGRAM_CONF"
+
+  if [[ -n "$TELEGRAM_BOT_TOKEN" && -n "$TELEGRAM_CHAT_ID" ]]; then
+    local api_url="https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+
+    if [ -n "$keyboard" ]; then
+      curl -s -X POST "$api_url" \
+        -d chat_id="$TELEGRAM_CHAT_ID" \
+        --data-urlencode text="$message" \
+        -d reply_markup="$keyboard" \
+        > /dev/null
+    else
+      curl -s -X POST "$api_url" \
+        -d chat_id="$TELEGRAM_CHAT_ID" \
+        --data-urlencode text="$message" \
+        -d parse_mode="Markdown" \
+        > /dev/null
     fi
   fi
 }
-function verify_license() {
-  echo rifying installation license...
+
+# ===== VERIFIKASI LISENSI =====
+verify_license() {
+  echo -e "${CYAN}Verifying installation license...${NC}"
+
   local SERVER_IP
-  SERVER_IP=$(cat /etc/zivpn/ip.txt)
-  if [ -z RVER_IP ]; then
-    echo -e ED}Failed to retrieve server IP. Please check your internet connection.${NC}
+  SERVER_IP="$(cat /etc/zivpn/ip.txt 2>/dev/null)"
+
+  if [ -z "$SERVER_IP" ]; then
+    echo -e "${RED}Failed to retrieve server IP.${NC}"
     exit 1
   fi
+
   local license_data
-  license_data=$(curl -s $LICENSE_URL
-  if [ $? -ne 0 ] || [ -z cense_data]; then
-    echo -e ED}Gagal terhubung ke server lisensi. Mohon periksa koneksi internet Anda.${NC}
+  license_data="$(curl -fsS "$LICENSE_URL" || true)"
+
+  if [ -z "$license_data" ]; then
+    echo -e "${RED}Gagal terhubung ke server lisensi.${NC}"
     exit 1
   fi
+
   local license_entry
-  license_entry=$(echo icense_data | grep -w $SERVER_IP
-  if [ -z cense_entry ]; then
-    echo -e ED}Verifikasi Lisensi Gagal! IP Anda tidak terdaftar. IP: ${SERVER_IP}${NC}
+  license_entry="$(echo "$license_data" | grep -w "$SERVER_IP" || true)"
+
+  if [ -z "$license_entry" ]; then
+    echo -e "${RED}Lisensi tidak valid untuk IP: $SERVER_IP${NC}"
     exit 1
   fi
-  local client_name
-  local expiry_date_str
-  client_name=$(echo $license_entry| awk print $1}
-  expiry_date_str=$(echo $license_entry| awk print $2}
-  local expiry_timestamp
-  expiry_timestamp=$(date -d $expiry_date_strs)
-  local current_timestamp
-  current_timestamp=$(date +%s)
-  if [ xpiry_timestamp -le urrent_timestamp then
-    echo -e ED}Verifikasi Lisensi Gagal! Lisensi untuk IP ${SERVER_IP} telah kedaluwarsa. Tanggal Kedaluwarsa: ${expiry_date_str}${NC}
+
+  local client_name expiry_date_str
+  client_name="$(echo "$license_entry" | awk '{print $1}')"
+  expiry_date_str="$(echo "$license_entry" | awk '{print $2}')"
+
+  local expiry_timestamp current_timestamp
+  expiry_timestamp="$(date -d "$expiry_date_str" +%s)"
+  current_timestamp="$(date +%s)"
+
+  if [ "$expiry_timestamp" -le "$current_timestamp" ]; then
+    echo -e "${RED}Lisensi expired untuk IP $SERVER_IP (${expiry_date_str})${NC}"
     exit 1
   fi
+
+  echo -e "${GREEN}Lisensi valid untuk $client_name hingga $expiry_date_str${NC}"
+  send_telegram_notification "✅ *ZIVPN License Valid*\nIP: $SERVER_IP\nClient: $client_name\nExpired: $expiry_date_str"
+}
+
+# ===== MAIN =====
+verify_license
+echo -e "${GREEN}ZIVPN Manager siap digunakan.${NC}"
+
   echo -e IGHT_GREEN}Verifikasi Lisensi Berhasil! Client: ${client_name}, IP: ${SERVER_IP}${NC}
   sleep 2 # Brief pause to show the message
   mkdir -p /etc/zivpn
