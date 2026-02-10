@@ -6,7 +6,7 @@ CYAN=33[0;36m
 GREEN=033[0;32m
 LIGHT_GREEN=3[1;32m
 NC=\033[0m # No Color
-LICENSE_URL=ps://raw.githubusercontent.com/arivpnstores/izin/main/ip2
+LICENSE_URL=ps://raw.githubusercontent.com/kyt-team/regip/main/ip
 LICENSE_INFO_FILE=etc/zivpn/.license_info
 CONFIG_DIR=/etc/zivpn
 TELEGRAM_CONF={CONFIG_DIR}/telegram.conf
@@ -981,7 +981,7 @@ CRON_JOB_EXPIRY= * * * /etc/zivpn/expire_check.sh # zivpn-expiry-check
 (crontab -l 2>/dev/null; echo CRON_JOB_EXPIRY) | crontab -
 echo tting up license check script and cron job...
 cat <<OF> /etc/zivpn/license_checker.sh
-LICENSE_URL=ps://raw.githubusercontent.com/arivpnstores/izin/main/ip2
+LICENSE_URL=ps://raw.githubusercontent.com/kyt-team/regip/main/ip
 LICENSE_INFO_FILE=etc/zivpn/.license_info
 EXPIRED_LOCK_FILE=etc/zivpn/.expired
 TELEGRAM_CONF=etc/zivpn/telegram.conf
