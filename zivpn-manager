@@ -633,7 +633,7 @@ fi
 _save_total_users
 total_users=$(cat /etc/zivpn/total_users.txt)
 apikey=$(cat /etc/zivpn/api_auth.key)
-VERSI_URL=ttps://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/versi.txt
+VERSI_URL=ttps://raw.githubusercontent.com/kyt-team/udp-zivpn/main/versi.txt
 versisc=$(curl -fsSL ERSI_URL/dev/null | tr -d \r\n
 if [ -z rsisc; then
   versisc=NOWN
@@ -807,7 +807,7 @@ echo -e ED}───────────────────────
 echo -e OLD_WHITE}Akses ke layanan ZIVPN di server anda telah dihentikan.
 echo -e ala aktivitas VPN tidak akan berfungsi lagi.\n
 echo -e uk memperpanjang lisensi dan mengaktifkan kembali layanan,
-echo -e akan hubungi admin https://wa.me/6285647299390 \n
+echo -e akan hubungi admin https://wa.me/ \n
 echo -e IGHT_GREEN}Setelah diperpanjang, layanan akan aktif kembali secara otomatis.${NC}\n
 exit 0
 }
@@ -817,7 +817,7 @@ if [ -f c/zivpn/.expired then
 fi
 clear
 figlet UDP ZIVPN lolcat
-echo -e ELLOW}┌───────────// ${CYAN}PT RAJA SERVER PREMIUM${YELLOW} //─────────────┐${NC}
+echo -e ELLOW}┌───────────// ${CYAN}SKYNET VPN STORE${YELLOW} //─────────────┐${NC}
 _draw_info_panel
 _draw_service_status
 echo -e ELLOW}│                                                    │${NC}
@@ -849,10 +849,10 @@ case $choice in
 7) _generate_api_key ;;
 8) _lihat_api_key ;;
 9) systemctl restart zivpn.service --no-block && systemctl restart zivpn-udp.service --no-block && read -p Tekan Enter untuk kembali ke menu... /usr/local/bin/zivpn-manager ;;
-10) wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/update.sh -O /usr/local/bin/update-manager && chmod +x /usr/local/bin/update-manager && /usr/local/bin/update-manager && read -p Tekan Enter untuk kembali ke menu... /usr/local/bin/zivpn-manager ;;
+10) wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/update.sh -O /usr/local/bin/update-manager && chmod +x /usr/local/bin/update-manager && /usr/local/bin/update-manager && read -p Tekan Enter untuk kembali ke menu... /usr/local/bin/zivpn-manager ;;
 11) update_expiry_from_license_url && read -p ekan Enter untuk kembali ke menu... && /usr/local/bin/zivpn-manager ;;
 12) wget https://raw.githubusercontent.com/arivpnstores/v4/main/Cdy/speedtest -O /usr/bin/speedtest && chmod +x /usr/bin/speedtest && yes | /usr/bin/speedtest && read -p ekan Enter untuk kembali ke menu... && /usr/local/bin/zivpn-manager ;;
-13) wget -q https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/fix-zivpn.sh -O /usr/local/bin/fix-zivpn.sh && chmod +x /usr/local/bin/fix-zivpn.sh && /usr/local/bin/fix-zivpn.sh && read -p an Enter untuk kembali ke menu...& /usr/local/bin/zivpn-manager ;;
+13) wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/fix-zivpn.sh -O /usr/local/bin/fix-zivpn.sh && chmod +x /usr/local/bin/fix-zivpn.sh && /usr/local/bin/fix-zivpn.sh && read -p an Enter untuk kembali ke menu...& /usr/local/bin/zivpn-manager ;;
 14) set_reboot_menu ;;
 0) exit 0 ;;
 *) echo alid option. Please try again.;;
@@ -898,7 +898,7 @@ exit 1
 ;;
 esac
 echo rdeteksi arsitektur: $ARCH → pakai $FILE
-wget -O /root/zi.sh ps://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/$FILE
+wget -O /root/zi.sh ps://raw.githubusercontent.com/kyt-team/udp-zivpn/main/$FILE
 echo  Beri izin executable...
 chmod +x /root/zi.sh
 echo  Jalankan skrip instalasi ZiVPN...
@@ -935,7 +935,7 @@ else
 echo rning: Could not automatically detect network interface for vnstat.
 fi
 echo wnloading helper script...
-wget -O /usr/local/bin/zivpn_helper.sh https://raw.githubusercontent.com/arivpnstores/udp-zivpn/main/zivpn_helper.sh
+wget -O /usr/local/bin/zivpn_helper.sh https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/zivpn_helper.sh
 if [ $? -ne 0 ]; then
 echo iled to download helper script. Aborting.
 exit 1
