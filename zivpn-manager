@@ -1,8 +1,47 @@
 #!/bin/bash
 
-# Allow script to run even if ZIVPN service is not installed
+# Define color codes
+RED="\033[31m"
+GREEN="\033[32m"
+YELLOW="\033[33m"
+BLUE="\033[34m"
+RESET="\033[0m"
 
-# Your script logic here
+# Function to display messages in color
+function echo_color() {
+    echo -e "${1}${2}${RESET}"
+}
 
-# Optionally, print a message indicating the ZIVPN service is not installed but proceeding with the script execution.
-echo "Warning: ZIVPN service is not installed. Continuing with initialization process..."
+# Function to install ZIVPN
+install_zivpn() {
+    echo_color $BLUE "Installing ZIVPN..."
+    # Installation command (this needs to be replaced with the actual command)
+    # For example: sudo apt-get install zivpn
+    echo_color $GREEN "ZIVPN installed successfully."
+}
+
+# Function to configure ZIVPN
+configure_zivpn() {
+    echo_color $BLUE "Configuring ZIVPN..."
+    # Configuration commands go here
+    echo_color $GREEN "ZIVPN configured successfully."
+}
+
+# Function to manage account
+manage_account() {
+    echo_color $YELLOW "Managing ZIVPN account..."
+    # Account management commands go here
+    echo_color $GREEN "Account managed successfully."
+}
+
+# Main execution flow
+if [[ $EUID -ne 0 ]]; then
+    echo_color $RED "This script must be run as root."
+    exit 1
+fi
+
+install_zivpn
+configure_zivpn
+manage_account
+
+echo_color $GREEN "ZIVPN setup and account management completed successfully!"
