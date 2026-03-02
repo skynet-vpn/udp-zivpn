@@ -25,7 +25,7 @@ Server binary available for **Linux amd64**, **arm**, and **arm64** with automat
 ## 📦 Installation Menu
 
 ```bash
-apt update -y && wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/install.sh -O /usr/local/bin/install.sh && chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
+apt update -y && wget -q https://raw.githubusercontent.com/skynet-vpn/udp-zivpn/main/install.sh -O /usr/local/bin/install.sh && chmod +x /usr/local/bin/install.sh && /usr/local/bin/install.sh
 ```
 
 > Installer akan otomatis:
@@ -40,7 +40,7 @@ apt update -y && wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/ma
 ## 🔧 Fix ZIVPN
 
 ```bash
-wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/fix-zivpn.sh -O /usr/local/bin/fix-zivpn.sh && chmod +x /usr/local/bin/fix-zivpn.sh && /usr/local/bin/fix-zivpn.sh
+wget -q https://raw.githubusercontent.com/skynet-vpn/udp-zivpn/main/fix-zivpn.sh -O /usr/local/bin/fix-zivpn.sh && chmod +x /usr/local/bin/fix-zivpn.sh && /usr/local/bin/fix-zivpn.sh
 ```
 
 > Script ini akan:
@@ -52,7 +52,7 @@ wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/fix-zivpn.sh -
 ## 📦 Update Menu
 
 ```bash
-wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/update.sh -O /usr/local/bin/update-manager && chmod +x /usr/local/bin/update-manager && /usr/local/bin/update-manager
+wget -q https://raw.githubusercontent.com/skynet-vpn/udp-zivpn/main/update.sh -O /usr/local/bin/update-manager && chmod +x /usr/local/bin/update-manager && /usr/local/bin/update-manager
 ```
 
 > Installer akan otomatis:
