@@ -11,7 +11,7 @@ LICENSE_URL=ps://raw.githubusercontent.com/skynet-vpn/regip/main/ip
 LICENSE_INFO_FILE=etc/zivpn/.license_info
 CONFIG_DIR=/etc/zivpn
 TELEGRAM_CONF={CONFIG_DIR}/telegram.conf
-if [ id -u)-ne 0 ]; then
+if [ id -u -ne 0 ]; then
   echo is script must be run as root. Please use sudo or run as root user. >&2
   exit 1
 fi
