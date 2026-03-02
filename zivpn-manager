@@ -1,80 +1,64 @@
-# ZIVPN Manager
+#!/bin/bash
 
-## Features
-- Functional interactive menu system
-- Account management features
-- Proper error handling
+# Function to create an account
+create_account() {
+    echo "Creating an account..."
+    # Implementation here
+}
 
-## Code
+# Function to list accounts
+list_accounts() {
+    echo "Listing accounts..."
+    # Implementation here
+}
 
-import os
-import sys
-import json
+# Function to delete an account
+delete_account() {
+    echo "Deleting an account..."
+    # Implementation here
+}
 
-class ZIVPNManager:
-    def __init__(self):
-        self.accounts = self.load_accounts()
+# Function to restart the service
+restart_service() {
+    echo "Restarting service..."
+    # Implementation here
+}
 
-    def load_accounts(self):
-        try:
-            with open('accounts.json', 'r') as file:
-                return json.load(file)
-        except FileNotFoundError:
-            return {}
-        except json.JSONDecodeError:
-            print('Error reading accounts file. Starting with an empty account list.')
-            return {}
+# Function to show system information
+system_info() {
+    echo "Displaying system information..."
+    # Implementation here
+}
 
-    def save_accounts(self):
-        with open('accounts.json', 'w') as file:
-            json.dump(self.accounts, file)
+# Function to process CLI commands
+process_cli_command() {
+    echo "Processing CLI command..."
+    # Implementation here
+}
 
-    def display_menu(self):
-        print('ZIVPN Manager Menu')
-        print('1. Add Account')
-        print('2. View Accounts')
-        print('3. Remove Account')
-        print('4. Exit')
+# Menu function
+menu() {
+    while true; do
+        echo "\n===== ZI VPN Manager Menu ====="
+        echo "1. Create Account"
+        echo "2. List Accounts"
+        echo "3. Delete Account"
+        echo "4. Restart Service"
+        echo "5. System Information"
+        echo "6. Exit"
+        echo -n "Please enter your choice: "
+        read choice
+        case $choice in
+            1) create_account;;
+            2) list_accounts;;
+            3) delete_account;;
+            4) restart_service;;
+            5) system_info;;
+            6) exit 0;;
+            *) echo "Invalid choice, please try again.";;
+        esac
+    done
+}
 
-    def add_account(self):
-        username = input('Enter username: ')
-        password = input('Enter password: ')
-        self.accounts[username] = password
-        self.save_accounts()
-        print('Account added successfully.')
-
-    def view_accounts(self):
-        if not self.accounts:
-            print('No accounts available.')
-            return
-        for username in self.accounts:
-            print(f'Username: {username}')
-
-    def remove_account(self):
-        username = input('Enter username to remove: ')
-        if username in self.accounts:
-            del self.accounts[username]
-            self.save_accounts()
-            print('Account removed successfully.')
-        else:
-            print('Account not found.')
-
-    def run(self):
-        while True:
-            self.display_menu()
-            choice = input('Select an option: ')
-            if choice == '1':
-                self.add_account()
-            elif choice == '2':
-                self.view_accounts()
-            elif choice == '3':
-                self.remove_account()
-            elif choice == '4':
-                print('Exiting...')
-                break
-            else:
-                print('Invalid choice. Please try again.')
-
-if __name__ == '__main__':
-    manager = ZIVPNManager()
-    manager.run()
+# Execute the menu
+menu
