@@ -66,7 +66,7 @@ wget -q https://raw.githubusercontent.com/skynet-vpn/udp-zivpn/main/update.sh -O
 ## 🧼 Uninstall Menu
 
 ```bash
-wget -q https://raw.githubusercontent.com/kyt-team/udp-zivpn/main/uninstall.sh -O /usr/local/bin/uninstall-zivpn && chmod +x /usr/local/bin/uninstall-zivpn && /usr/local/bin/uninstall-zivpn
+wget -q https://raw.githubusercontent.com/skynet-vpn/udp-zivpn/main/uninstall.sh -O /usr/local/bin/uninstall-zivpn && chmod +x /usr/local/bin/uninstall-zivpn && /usr/local/bin/uninstall-zivpn
 ```
 
 > Uninstall akan:
